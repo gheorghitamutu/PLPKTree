@@ -1,6 +1,6 @@
 #pragma once
 #include "IncludeHeader.h"
-#include "Token.h"
+#include "KToken.h"
 
 class Input
 {
