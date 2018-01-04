@@ -1,15 +1,17 @@
 #pragma once
 #include "Expression.h"
-class Token
+class KToken : public Expression
 {
 public:
-	Token();
-	~Token();
+	KToken();
+	~KToken();
 
 	char* GetTokenType();
 	char* GetTokenValue();
 	void SetTokenType(char* type);
 	void SetTokenValue(char* value);
+
+	KToken operator=(const KToken rhs);
 private:
 	char* type;
 	char* value;

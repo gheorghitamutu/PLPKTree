@@ -48,13 +48,19 @@
     <ClCompile Include="InputFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TreeBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KToken.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,10 +91,16 @@
     <ClInclude Include="IncludeHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TreeBuilder.h">
+    <ClInclude Include="KToken.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KToken.h">
+    <ClInclude Include="Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

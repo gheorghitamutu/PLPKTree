@@ -2,14 +2,16 @@
 #include "KToken.h"
 
 
-Token::Token()
+KToken::KToken()
 {
 	this->type = NULL;
 	this->value = NULL;
+	SetIdentifier('#');
+	SetExpressionName("KToken");
 }
 
 
-Token::~Token()
+KToken::~KToken()
 {
 	if (this->type != NULL)
 	{
@@ -21,24 +23,35 @@ Token::~Token()
 	}
 }
 
-char * Token::GetTokenType()
+char * KToken::GetTokenType()
 {
 	return this->type;
 }
 
-char * Token::GetTokenValue()
+char * KToken::GetTokenValue()
 {
 	return this->value;
 }
 
-void Token::SetTokenType(char* type)
+void KToken::SetTokenType(char* type)
 {
 	this->type = (char*)malloc(MAX_TOKEN_SIZE);
 	strcpy(this->type, type);
 }
 
-void Token::SetTokenValue(char * value)
+void KToken::SetTokenValue(char * value)
 {
 	this->value = (char*)malloc(MAX_TOKEN_SIZE);
 	strcpy(this->value, value);
+}
+
+KToken KToken::operator=(KToken rhs)
+{
+	if (this != &rhs)
+	{
+		this->type = rhs.GetTokenType();
+		this->value = rhs.GetTokenValue();
+	}
+	
+	return *this;
 }

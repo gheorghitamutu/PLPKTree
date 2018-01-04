@@ -8,7 +8,8 @@ public:
 	~InputFile();
 
 	void ReadFile(const char* filepath);
-	bool AddToken();
+	KToken* CreateToken();
+	Expression* CreateExpression();
 public:
 	FILE * fp;
 	int file_size;

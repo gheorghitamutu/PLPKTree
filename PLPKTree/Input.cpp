@@ -15,6 +15,11 @@ Input::~Input()
 	}
 }
 
+void Input::ParseTree()
+{
+	this->tree.ParseTree();
+}
+
 bool Input::ParseInput()
 {
 	for (buffer_index = 0; buffer_index < this->size_input; buffer_index++)
@@ -22,11 +27,16 @@ bool Input::ParseInput()
 		switch (this->buffer_input[buffer_index])
 		{
 		case '#':
-			AddToken();
+			tree.AddBranch(CreateToken());
+			break;
+		case '`':
+			tree.AddBranch(CreateExpression());
 			break;
 		default:
 			break;
 		}
 	}
+
+	tree.ResetCurrentExp();
 	return true;
 }

@@ -36,7 +36,7 @@ void InputFile::ReadFile(const char * filepath)
 	fclose(fp);
 }
 
-bool InputFile::AddToken()
+KToken* InputFile::CreateToken()
 {
 	int index_token_member = 0;
 
@@ -44,8 +44,10 @@ bool InputFile::AddToken()
 	char* temp_param = NULL;
 	int temp_param_index;
 
+	KToken* ktoken = NULL;
+
 	while (this->buffer_input[this->buffer_index] != ')' &&
-		this->buffer_index < this->file_size)
+		this->buffer_index < this->file_size) // check against buffer size also
 	{
 		if (this->buffer_input[this->buffer_index] == '\"')
 		{
@@ -63,7 +65,7 @@ bool InputFile::AddToken()
 
 				if (index_token_member == 0)
 				{
-					tokens.emplace_back(new Token);
+					ktoken = new KToken;
 				}
 
 				this->buffer_index++;
@@ -72,16 +74,15 @@ bool InputFile::AddToken()
 			else
 			{
 				temp_param[temp_param_index] = 0;
-				printf("%s\n", temp_param);
 
 				if (index_token_member == 0)
 				{
-					tokens.back()->SetTokenValue(temp_param);
+					ktoken->SetTokenValue(temp_param);
 					index_token_member++;
 				}
 				else
 				{
-					tokens.back()->SetTokenType(temp_param);
+					ktoken->SetTokenType(temp_param);
 					index_token_member = 0;
 				}
 				delete temp_param;
@@ -95,14 +96,39 @@ bool InputFile::AddToken()
 			temp_param_index++;
 		}
 
-		//printf("%c", this->buffer_input[this->buffer_index]); // printing token
 		this->buffer_index++;
 	}
 
+	return ktoken;
+}
 
-	//printf("%c\n", this->buffer_input[this->buffer_index]);  // printing token
+Expression * InputFile::CreateExpression()
+{
+	Expression* expression = NULL;
 
-	return true;
+	this->buffer_index++; // jump over first `
+
+	char* temp_param = (char*)malloc(MAX_EXPRESSION_NAME_SIZE);
+	memset(temp_param, 0, MAX_EXPRESSION_NAME_SIZE);
+
+	int temp_param_index = 0;
+
+	while (this->buffer_input[this->buffer_index] != '`' && 
+		this->buffer_index < this->file_size) // check against buffer size also
+	{
+		temp_param[temp_param_index] = this->buffer_input[this->buffer_index];
+
+		temp_param_index++;
+		this->buffer_index++;
+	}
+
+	expression = new Expression;
+	expression->SetExpressionName(temp_param);
+	expression->SetChildrenCount();
+
+	delete temp_param;
+
+	return expression;
 }
 
 

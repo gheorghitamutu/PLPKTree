@@ -1,5 +1,7 @@
 #pragma once
 #include "IncludeHeader.h"
+#include "Expression.h"
+#include "Tree.h"
 #include "KToken.h"
 
 class Input
@@ -7,14 +9,16 @@ class Input
 public:
 	Input();
 	~Input();
-	virtual bool AddToken() = 0;
+	virtual KToken* CreateToken() = 0;
+	virtual Expression* CreateExpression() = 0;
+	void ParseTree();
 	bool ParseInput();
 
 public:
 	char* buffer_input;
 	int buffer_index;
 	int size_input;
-	std::vector<Token*> tokens;
+	Tree tree;
 };
 
  
