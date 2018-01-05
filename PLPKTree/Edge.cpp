@@ -13,7 +13,7 @@ Edge::Edge(Node *source_node, Node *dest_node)
     source->AddEdge(this);
     dest->AddEdge(this);
     Adjust();
-    setScale(2.4);
+    setScale(2);
 }
 
 Node *Edge::SourceNode() const

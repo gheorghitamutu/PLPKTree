@@ -17,7 +17,7 @@ Node::Node(GraphWidget *graph_widget, QString node_name, QColor color, QColor da
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
-    setScale(2.4);
+    setScale(2);
 }
 
 void Node::AddEdge(Edge *edge)
@@ -33,7 +33,8 @@ QList<Edge *> Node::edges() const
 
 void Node::CalculateForces()
 {
-    if (!scene() || scene()->mouseGrabberItem() == this) {
+    if (!scene() || scene()->mouseGrabberItem() == this)
+	{
         new_pos = pos();
         return;
     }
@@ -41,16 +42,20 @@ void Node::CalculateForces()
     // Sum up all forces pushing this item away
     qreal xvel = 0;
     qreal yvel = 0;
-    foreach (QGraphicsItem *item, scene()->items()) {
+    foreach (QGraphicsItem *item, scene()->items())
+	{
         Node *node = qgraphicsitem_cast<Node *>(item);
-        if (!node)
-            continue;
+		if (!node)
+		{
+			continue;
+		}
 
         QPointF vec = mapToItem(node, 0, 0);
         qreal dx = vec.x();
         qreal dy = vec.y();
         double l = 2.0 * (dx * dx + dy * dy);
-        if (l > 0) {
+        if (l > 0)
+		{
             xvel += (dx * 150.0) / l;
             yvel += (dy * 150.0) / l;
         }
@@ -58,7 +63,8 @@ void Node::CalculateForces()
 
     // Now subtract all forces pulling items together
     double weight = (edge_list.size() + 1) * 10;
-    foreach (Edge *edge, edge_list) {
+    foreach (Edge *edge, edge_list)
+	{
         QPointF vec;
 		if (edge->SourceNode() == this)
 		{
@@ -78,7 +84,7 @@ void Node::CalculateForces()
 	}
 
     QRectF scene_rect = scene()->sceneRect();
-	new_pos = pos(); // +QPointF(xvel, yvel);                                                      // these lines make the graph elastic
+	new_pos = pos(); // +QPointF(xvel, yvel);                                                         // these lines make the graph elastic
     //new_pos.setX(qMin(qMax(new_pos.x(), scene_rect.left() + 10), scene_rect.right() - 10));    	  // these lines make the graph elastic
     //new_pos.setY(qMin(qMax(new_pos.y(), scene_rect.top() + 10), scene_rect.bottom() - 10));		  // these lines make the graph elastic
 }
@@ -121,12 +127,15 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 	// draw gradient
     QRadialGradient gradient(-3, -3, 10);
-    if (option->state & QStyle::State_Sunken) {
+    if (option->state & QStyle::State_Sunken)
+	{
         gradient.setCenter(3, 3);
         gradient.setFocalPoint(3, 3);
         gradient.setColorAt(1, color.light(120));
         gradient.setColorAt(0, dark_color.light(120));
-    } else {
+    } 
+	else
+	{
         gradient.setColorAt(0, color);
         gradient.setColorAt(1, dark_color);
     }
@@ -154,10 +163,13 @@ void Node::SetNewPos(QPointF newPos)
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    switch (change) {
+    switch (change)
+	{
     case ItemPositionHasChanged:
-        foreach (Edge *edge, edge_list)
-            edge->Adjust();
+		foreach(Edge *edge, edge_list)
+		{
+			edge->Adjust();
+		}
         graph->ItemMoved();
         break;
     default:

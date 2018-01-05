@@ -17,17 +17,21 @@ GraphWidget::GraphWidget(QWidget *parent)
 	this->screen_height = screen_geometry.height();
 	this->screen_width = screen_geometry.width();
 
-	this->tree_level_height = 400;
+	this->tree_level_height = 100;
+	this->tree_nodes_width = 80;
 }
 
 void GraphWidget::SetTree(std::vector<std::vector<Expression*>> tree)
 {
 	QGraphicsScene *scene = new QGraphicsScene(this);
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-	int scene_width = std::pow(tree.size() + 1, 2) * 40;
+
+	// set background width based on how many level the tree has to the power of max leafs of a binary tree
+	int scene_width = std::pow(tree.size() + 1, 2) * 10;
 	scene->setSceneRect(-scene_width, -(tree.size() * this->tree_level_height), scene_width, tree.size() * this->tree_level_height);
 	setScene(scene);
 
+	// set visual effects/relative positions of window/widget
 	setCacheMode(CacheBackground);
 	setViewportUpdateMode(BoundingRectViewportUpdate);
 	setRenderHint(QPainter::Antialiasing);
@@ -37,9 +41,11 @@ void GraphWidget::SetTree(std::vector<std::vector<Expression*>> tree)
 	setMinimumSize(this->screen_width, this->screen_height);
 	setWindowTitle(tr("PLP KTree"));
 
+	// set root node
 	this->root_node = new Node(this, QString(tree[0][0]->GetExpressionName()), Qt::red, Qt::darkRed);
 	this->nodes.emplace_back(this->root_node);
 
+	// add nodes in nodes vector
 	for (int index = 1; index < tree.size(); index++)
 	{
 		for (auto node : tree[index])
@@ -59,20 +65,18 @@ void GraphWidget::SetTree(std::vector<std::vector<Expression*>> tree)
 			{
 				total_children++;
 				this->edges.emplace_back(new Edge(this->nodes[current_node], this->nodes[total_children]));
-				scene->addItem(edges.back()); // draw edges before nodes - they will get the nodes position which will be set up later
+				scene->addItem(edges.back()); // add edges before nodes - they will get the nodes position which will be set up later
 			}
 			current_node++;
 		}
 	}
 
-	bool root_children = true;
-	float scene_width_temp = scene_width;
-	this->root_node->setPos(QPointF(-scene_width_temp / 2, -scene->height() + 40));
-	current_node = 0;
-	int level = 0;
+	// set all nodes in the middle of the background in x axis and on a tree_level_width * level/background_size on y axis
+	this->root_node->setPos(QPointF(-scene_width / 2, -scene->height() + 40)); // 40 - drop it a bit lower than the edge of the background
+	QPointF source_pos;
 	for (auto node : nodes)
 	{
-		int count = 0; // how many time is source node in edges vector?
+		int count = 0; // how many time is node as a source node in edges vector?
 		for (auto edge : edges)
 		{
 			if (edge->SourceNode() == node)
@@ -81,52 +85,62 @@ void GraphWidget::SetTree(std::vector<std::vector<Expression*>> tree)
 			}
 		}
 
-		if (count != 0)
+		if (count != 0) // if node is not leaf it should be at least once in the edges vector as source node
 		{
-
-
-			int count_children = 1;
 			for (int index = edges.size() - 1; index >= 0; index--)
 			{
 				if (edges[index]->SourceNode() == node)
 				{
-					if (root_children == false)
-					{
-						QPointF source_pos = edges[index]->SourceNode()->GetPos();
-						edges[index]->DestNode()->setPos(source_pos.x() - scene_width_temp / (count + 2)*count_children + scene_width_temp / 2, source_pos.y() + this->tree_level_height);
-						count_children += 2;
-					}
-					else
-					{
-						QPointF source_pos = root_node->GetPos();
-						edges[index]->DestNode()->setPos(-scene_width_temp / (count + 1)*count_children, source_pos.y() + this->tree_level_height);
-						count_children += 1;
-					}
+						source_pos = edges[index]->SourceNode()->GetPos();
+						// set all nodes with a small offset (tree_nodes_width) which will center them later taking root as a fixed middle point on y axis for all child nodes
+						edges[index]->DestNode()->setPos(-scene_width / 2 + tree_nodes_width / 2, source_pos.y() + this->tree_level_height);	
 				}
 			}
-			root_children = false;
 		}
-		current_node++;
-		int count_nodes = 0;
-		for (auto nodes : tree)
-		{
-			count_nodes += nodes.size();
-			if (count_nodes == current_node)
-			{
-				scene_width_temp /= (1.8 + 1/(level+1));
-				level++;
-				break;
-			}
-		}
-		
 	}
 
+	// add nodes in scene
 	for (auto node : nodes)
 	{
 		scene->addItem(node);
 	}
 
-	
+	// balance nodes position
+	int nodes_moved = true;			
+	std::vector<int> indexes;
+	int balance_position_index;
+	while (nodes_moved)	// there are still too closer nodes
+	{
+		nodes_moved = false;
+		for (int index01 = 0; index01 < nodes.size(); index01++)
+		{
+			indexes.emplace_back(index01);
+			for (int index02 = index01 + 1; index02 < nodes.size(); index02++)
+			{
+				qreal difference = abs(nodes[index01]->GetPos().x() - nodes[index02]->GetPos().x());
+				if (nodes[index01]->GetPos().y() == nodes[index02]->GetPos().y() &&
+					difference < tree_nodes_width) // if 2 nodes are on the same y axis but too close on x axis
+				{
+					indexes.emplace_back(index02); // mark and center them later
+					nodes_moved = true;
+				}
+			}
+
+			if (indexes.size() == 1) // if this node doesn't have any other node too close on x axis
+			{
+				indexes.clear();
+				continue;
+			}
+
+			balance_position_index = - indexes.size() / 2; // upper offset useful here while centering all nodes
+			for (auto index : indexes)
+			{
+				nodes[index]->setPos(nodes[index]->GetPos().x() + tree_nodes_width * balance_position_index, nodes[index]->GetPos().y());
+				balance_position_index++;
+			}
+			indexes.clear();
+		}
+	}
 }
 
 void GraphWidget::ItemMoved()

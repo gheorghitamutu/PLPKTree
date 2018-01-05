@@ -36,6 +36,7 @@ private:
 	std::vector<Node*> nodes;
 	std::vector<Edge*> edges;
 	float tree_level_height;
+	float tree_nodes_width;
 	int screen_height;
 	int screen_width;
 };

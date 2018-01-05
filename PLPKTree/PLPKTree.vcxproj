@@ -106,7 +106,6 @@
   <ItemGroup>
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Expression.h" />
-    <ClInclude Include="GeneratedFiles\ui_PLPKTree.h" />
     <CustomBuild Include="GraphWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing GraphWidget.h...</Message>
