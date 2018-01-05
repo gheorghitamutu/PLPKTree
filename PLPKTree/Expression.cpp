@@ -26,6 +26,18 @@ void Expression::SetChildrenCount()
 		return;
 	}
 
+	if (!strcmp(this->exp_name, "{}"))
+	{
+		this->count_children = 1;
+		return;
+	}
+
+	if (strstr(this->exp_name, ".List{"))
+	{
+		this->count_children = 1;
+		return;
+	}
+
 	for (int index = 0; index < strlen(this->exp_name); index++)
 	{
 		if (this->exp_name[index] == '_')

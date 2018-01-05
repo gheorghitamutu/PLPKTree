@@ -17,14 +17,15 @@ GraphWidget::GraphWidget(QWidget *parent)
 	this->screen_height = screen_geometry.height();
 	this->screen_width = screen_geometry.width();
 
-	this->tree_level_height = 200;
+	this->tree_level_height = 400;
 }
 
 void GraphWidget::SetTree(std::vector<std::vector<Expression*>> tree)
 {
 	QGraphicsScene *scene = new QGraphicsScene(this);
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-	scene->setSceneRect(-(std::pow(tree.size() + 1, 2) * 40), -(tree.size() * this->tree_level_height), std::pow(tree.size() + 1, 2) * 40, tree.size() * this->tree_level_height);
+	int scene_width = std::pow(tree.size() + 1, 2) * 40;
+	scene->setSceneRect(-scene_width, -(tree.size() * this->tree_level_height), scene_width, tree.size() * this->tree_level_height);
 	setScene(scene);
 
 	setCacheMode(CacheBackground);
@@ -47,6 +48,7 @@ void GraphWidget::SetTree(std::vector<std::vector<Expression*>> tree)
 		}
 	}
 
+	// add edges
 	int total_children = 0;
 	int current_node = 0;
 	for (auto nodes_v : tree)
@@ -56,29 +58,67 @@ void GraphWidget::SetTree(std::vector<std::vector<Expression*>> tree)
 			for (int index = 0; index < node->GetChildren().size() && node->GetChildren().size() != 0; index++)
 			{
 				total_children++;
-				this->edges.emplace_back(new Edge(this->nodes[total_children], this->nodes[current_node]));
-				scene->addItem(edges.back());
+				this->edges.emplace_back(new Edge(this->nodes[current_node], this->nodes[total_children]));
+				scene->addItem(edges.back()); // draw edges before nodes - they will get the nodes position which will be set up later
 			}
 			current_node++;
 		}
 	}
 
-	this->root_node->setPos(QPointF(-scene->width() / 2, -scene->height() + 40));
-	int tree_level = 0;
-	current_node = 1;
-	for (auto nodes_v : tree)
+	bool root_children = true;
+	float scene_width_temp = scene_width;
+	this->root_node->setPos(QPointF(-scene_width_temp / 2, -scene->height() + 40));
+	current_node = 0;
+	int level = 0;
+	for (auto node : nodes)
 	{
-		if (tree_level != 0)
+		int count = 0; // how many time is source node in edges vector?
+		for (auto edge : edges)
 		{
-			int index02 = 1;
-			for (auto node : nodes_v)
+			if (edge->SourceNode() == node)
 			{
-				this->nodes[current_node]->setPos(QPointF(scene->width() / (nodes_v.size() + 1) * index02 - scene->width(), -scene->height() + tree_level * this->tree_level_height));
-				current_node++;
-				index02++;
+				count++;
 			}
 		}
-		tree_level++;
+
+		if (count != 0)
+		{
+
+
+			int count_children = 1;
+			for (int index = edges.size() - 1; index >= 0; index--)
+			{
+				if (edges[index]->SourceNode() == node)
+				{
+					if (root_children == false)
+					{
+						QPointF source_pos = edges[index]->SourceNode()->GetPos();
+						edges[index]->DestNode()->setPos(source_pos.x() - scene_width_temp / (count + 2)*count_children + scene_width_temp / 2, source_pos.y() + this->tree_level_height);
+						count_children += 2;
+					}
+					else
+					{
+						QPointF source_pos = root_node->GetPos();
+						edges[index]->DestNode()->setPos(-scene_width_temp / (count + 1)*count_children, source_pos.y() + this->tree_level_height);
+						count_children += 1;
+					}
+				}
+			}
+			root_children = false;
+		}
+		current_node++;
+		int count_nodes = 0;
+		for (auto nodes : tree)
+		{
+			count_nodes += nodes.size();
+			if (count_nodes == current_node)
+			{
+				scene_width_temp /= (1.8 + 1/(level+1));
+				level++;
+				break;
+			}
+		}
+		
 	}
 
 	for (auto node : nodes)

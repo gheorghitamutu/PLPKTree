@@ -21,6 +21,7 @@ public:
 
     void CalculateForces();
     bool Advance();
+	QPointF GetPos();
 
     QRectF boundingRect() const override;
     QPainterPath shape() const override;

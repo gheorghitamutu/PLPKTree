@@ -131,6 +131,35 @@ Expression * InputFile::CreateExpression()
 	return expression;
 }
 
+KList * InputFile::CreateKList()
+{
+	KList* k_list = NULL;
+
+	this->buffer_index++; // jump over first `
+
+	char* temp_param = (char*)malloc(MAX_EXPRESSION_NAME_SIZE);
+	memset(temp_param, 0, MAX_EXPRESSION_NAME_SIZE);
+
+	int temp_param_index = 0;
+
+	while (this->buffer_input[this->buffer_index] != ')' &&
+		this->buffer_index < this->file_size) // check against buffer size also
+	{
+		temp_param[temp_param_index] = this->buffer_input[this->buffer_index];
+
+		temp_param_index++;
+		this->buffer_index++;
+	}
+
+	k_list = new KList;
+	k_list->SetExpressionName(temp_param);
+	k_list->SetChildrenCount();
+
+	delete temp_param;
+
+	return k_list;
+}
+
 
 InputFile::~InputFile()
 {

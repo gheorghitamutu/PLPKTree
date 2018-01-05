@@ -29,6 +29,9 @@ bool Input::ParseInput()
 		case '#':
 			tree.AddBranch(CreateToken());
 			break;
+		case '.':
+			tree.AddBranch(CreateKList());
+			break;
 		case '`':
 			tree.AddBranch(CreateExpression());
 			break;

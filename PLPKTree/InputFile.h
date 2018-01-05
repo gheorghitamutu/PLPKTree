@@ -10,6 +10,7 @@ public:
 	void ReadFile(const char* filepath);
 	KToken* CreateToken();
 	Expression* CreateExpression();
+	KList* CreateKList();
 public:
 	FILE * fp;
 	int file_size;

@@ -77,10 +77,10 @@ void Node::CalculateForces()
 		xvel = yvel = 0;
 	}
 
-    QRectF sceneRect = scene()->sceneRect();
-	new_pos = pos();// +QPointF(xvel, yvel);                                                      // these lines make the graph elastic
-    //newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + 10), sceneRect.right() - 10));    	  // these lines make the graph elastic
-    //newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + 10), sceneRect.bottom() - 10));		  // these lines make the graph elastic
+    QRectF scene_rect = scene()->sceneRect();
+	new_pos = pos(); // +QPointF(xvel, yvel);                                                      // these lines make the graph elastic
+    //new_pos.setX(qMin(qMax(new_pos.x(), scene_rect.left() + 10), scene_rect.right() - 10));    	  // these lines make the graph elastic
+    //new_pos.setY(qMin(qMax(new_pos.y(), scene_rect.top() + 10), scene_rect.bottom() - 10));		  // these lines make the graph elastic
 }
 
 bool Node::Advance()
@@ -92,6 +92,11 @@ bool Node::Advance()
 
     setPos(new_pos);
     return true;
+}
+
+QPointF Node::GetPos()
+{
+	return this->pos();
 }
 
 QRectF Node::boundingRect() const

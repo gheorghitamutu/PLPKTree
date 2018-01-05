@@ -3,6 +3,7 @@
 #include "Expression.h"
 #include "Tree.h"
 #include "KToken.h"
+#include "KList.h"
 
 class Input
 {
@@ -11,6 +12,7 @@ public:
 	~Input();
 	virtual KToken* CreateToken() = 0;
 	virtual Expression* CreateExpression() = 0;
+	virtual Expression* CreateKList() = 0;
 	void ParseTree();
 	bool ParseInput();
 	std::vector<std::vector<Expression*>> GetTree();

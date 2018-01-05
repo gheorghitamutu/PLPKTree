@@ -86,7 +86,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputFile.cpp" />
     <ClCompile Include="KList.cpp" />
-    <ClCompile Include="node.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="KToken.cpp" />
     <ClCompile Include="Tree.cpp" />
@@ -121,7 +121,7 @@
     <ClInclude Include="InputFile.h" />
     <ClInclude Include="IncludeHeader.h" />
     <ClInclude Include="KList.h" />
-    <ClInclude Include="node.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="KToken.h" />
     <ClInclude Include="Tree.h" />
@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Test01.txt" />
+    <Text Include="Test02.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
