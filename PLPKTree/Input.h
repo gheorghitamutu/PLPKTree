@@ -13,6 +13,7 @@ public:
 	virtual Expression* CreateExpression() = 0;
 	void ParseTree();
 	bool ParseInput();
+	std::vector<std::vector<Expression*>> GetTree();
 
 public:
 	char* buffer_input;

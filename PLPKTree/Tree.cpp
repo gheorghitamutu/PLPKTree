@@ -8,7 +8,7 @@ Tree::Tree()
 
 Tree::~Tree()
 {
-	if (this->current_exp != NULL)
+	if (this->current_exp != NULL && this->current_exp != this->root_exp)
 	{
 		delete this->current_exp;
 	}
@@ -95,9 +95,64 @@ void Tree::ParseTree()
 			v_size = nodes_to_visit.size();
 		}
 	}
+
+	this->current_exp = NULL;
 }
 
 void Tree::ResetCurrentExp()
 {
 	this->current_exp = NULL;
+}
+
+std::vector<std::vector<Expression*>> Tree::GetTree()
+{
+	if (this->root_exp == NULL)
+	{
+		return this->tree;
+	}
+	else
+	{
+		std::vector<Expression*> temp_vector;
+
+		if (this->current_exp == NULL)
+		{
+			this->current_exp = this->root_exp;
+			nodes_to_visit.emplace_back(this->current_exp);
+		}
+
+		int v_size = nodes_to_visit.size();
+		while (nodes_to_visit.size() > 0)
+		{
+			for (auto exp : nodes_to_visit)
+			{
+				temp_vector.emplace_back(exp);
+			}
+
+			this->tree.emplace_back(temp_vector);
+			temp_vector.clear();
+
+			for (auto exp : nodes_to_visit)
+			{
+				for (auto exp_child : exp->GetChildren())
+				{
+					temp_vector.emplace_back(exp_child);
+				}
+			}
+
+			this->nodes_to_visit.clear();
+
+			for (auto exp : temp_vector)
+			{
+				this->nodes_to_visit.emplace_back(exp);
+			}
+
+			temp_vector.clear();
+
+			v_size = nodes_to_visit.size();
+		}
+	}
+
+	this->current_exp = NULL;
+
+	return this->tree;
 }

@@ -96,8 +96,5 @@ void Expression::AddChild(Expression * expression)
 
 Expression::~Expression()
 {
-	if (this->exp_name != NULL)
-	{
-		delete this->exp_name;
-	}
+
 }

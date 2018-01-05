@@ -16,7 +16,7 @@ public:
 	std::vector<Expression*> GetChildren();
 	void AddChild(Expression* expression);
 	~Expression();
-private:
+protected:
 	char identifier;
 	char* exp_name;
 	Expression* father;

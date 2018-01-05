@@ -1,5 +1,8 @@
-#include "PLPKTree.h"
-#include <QtWidgets/QApplication>
+#include <QApplication>
+#include <QTime>
+#include <QMainWindow>
+
+#include "graphwidget.h"
 #include "InputFile.h"
 
 int main(int argc, char *argv[])
@@ -8,9 +11,17 @@ int main(int argc, char *argv[])
 	input_file.ReadFile(argv[1]);
 	input_file.ParseInput();
 	input_file.ParseTree();
+	std::vector<std::vector<Expression*>> tree = input_file.GetTree();
 
-	QApplication a(argc, argv);
-	PLPKTree w;
-	w.show();
-	return a.exec();
+	QApplication app(argc, argv);
+
+	GraphWidget *widget = new GraphWidget;
+	widget->SetTree(tree);
+
+	QMainWindow mainWindow;
+	mainWindow.setCentralWidget(widget);
+
+	mainWindow.show();
+
+	return app.exec();
 }

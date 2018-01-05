@@ -85,7 +85,7 @@ KToken* InputFile::CreateToken()
 					ktoken->SetTokenType(temp_param);
 					index_token_member = 0;
 				}
-				delete temp_param;
+				free(temp_param);
 				temp_param = NULL;
 			}
 		}

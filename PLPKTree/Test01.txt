@@ -1,4 +1,7 @@
 `_/_`( `_+_`( 
     `_+_`( #token( "1", "Int") , #token( "2", "Int") ) , 
+    `_*_`( #token( "4", "Int") , `_/_`( `_+_`( 
+    `_+_`( #token( "1", "Int") , #token( "2", "Int") ) , 
     `_*_`( #token( "4", "Int") , #token( "3", "Int") ) 
+            ) , #token( "2", "Int") )  ) 
             ) , #token( "2", "Int") ) 

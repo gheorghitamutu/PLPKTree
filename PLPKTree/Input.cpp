@@ -40,3 +40,8 @@ bool Input::ParseInput()
 	tree.ResetCurrentExp();
 	return true;
 }
+
+std::vector<std::vector<Expression*>> Input::GetTree()
+{
+	return tree.GetTree();
+}

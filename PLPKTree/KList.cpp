@@ -1,7 +1,5 @@
 #include "KList.h"
 
-
-
 KList::KList()
 {
 }
