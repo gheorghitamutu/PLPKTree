@@ -7,5 +7,7 @@ class KList : public Expression
 public:
 	KList();
 	~KList();
+
+	void SetChildrenCount();
 };
 

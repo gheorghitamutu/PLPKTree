@@ -116,5 +116,6 @@
   <ItemGroup>
     <Text Include="Test01.txt" />
     <Text Include="Test02.txt" />
+    <Text Include="Test03.txt" />
   </ItemGroup>
 </Project>

@@ -45,6 +45,11 @@ void Expression::SetChildrenCount()
 			this->count_children++;
 		}
 	}
+
+	if (this->count_children == 0)
+	{
+		this->count_children = 1;
+	}
 }
 
 int Expression::GetFreeChildrenCount()

@@ -9,10 +9,7 @@ Input::Input()
 
 Input::~Input()
 {
-	if (this->buffer_input != NULL)
-	{
-		delete this->buffer_input;
-	}
+
 }
 
 void Input::ParseTree()

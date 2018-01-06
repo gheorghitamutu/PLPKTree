@@ -18,22 +18,27 @@ void InputFile::ReadFile(const char * filepath)
 	fseek(fp, 0L, SEEK_END);
 	this->file_size = ftell(fp);
 	this->size_input = this->file_size;
+	if (this->file_size <= 2)
+	{
+		exit(1); // can t be a kast tree with such a small size
+	}
 	fseek(fp, 0, SEEK_SET);
 
-	this->buffer_input = (char*)malloc(this->file_size);
+	this->buffer_input = (char*)malloc(this->file_size + 1); // + 1 - fix warning for buffer overflow
 	if (this->buffer_input == NULL)
 	{
 		exit(1);
 	}
 
-	this->buffer_index = 0;
-	while ((this->buffer_input[this->buffer_index] = getc(fp)) != EOF)
+	for(this->buffer_index = 0; this->buffer_index < this->size_input; this->buffer_index++)
 	{
-		this->buffer_index++;
+		this->buffer_input[this->buffer_index] = getc(fp);
 	}
+	this->buffer_input[this->buffer_index] = '/0'; // make sure that all the methods you'll use won t access bad memory
 	this->buffer_index = 0;
 
 	fclose(fp);
+	fp = NULL; // bug fix in destructor
 }
 
 KToken* InputFile::CreateToken()
@@ -49,7 +54,8 @@ KToken* InputFile::CreateToken()
 	while (this->buffer_input[this->buffer_index] != ')' &&
 		this->buffer_index < this->file_size) // check against buffer size also
 	{
-		if (this->buffer_input[this->buffer_index] == '\"')
+		if (this->buffer_input[this->buffer_index] == '\"' && 
+			this->buffer_input[this->buffer_index - 1] != '\\') // fix escaped characters bug
 		{
 			save = !save;
 
@@ -109,6 +115,10 @@ Expression * InputFile::CreateExpression()
 	this->buffer_index++; // jump over first `
 
 	char* temp_param = (char*)malloc(MAX_EXPRESSION_NAME_SIZE);
+	if (temp_param == NULL)
+	{
+		exit(1);
+	}
 	memset(temp_param, 0, MAX_EXPRESSION_NAME_SIZE);
 
 	int temp_param_index = 0;
@@ -126,7 +136,7 @@ Expression * InputFile::CreateExpression()
 	expression->SetExpressionName(temp_param);
 	expression->SetChildrenCount();
 
-	delete temp_param;
+	free(temp_param);
 
 	return expression;
 }
@@ -138,6 +148,10 @@ KList * InputFile::CreateKList()
 	this->buffer_index++; // jump over first `
 
 	char* temp_param = (char*)malloc(MAX_EXPRESSION_NAME_SIZE);
+	if (temp_param == NULL)
+	{
+		exit(1);
+	}
 	memset(temp_param, 0, MAX_EXPRESSION_NAME_SIZE);
 
 	int temp_param_index = 0;
@@ -155,7 +169,7 @@ KList * InputFile::CreateKList()
 	k_list->SetExpressionName(temp_param);
 	k_list->SetChildrenCount();
 
-	delete temp_param;
+	free(temp_param);
 
 	return k_list;
 }

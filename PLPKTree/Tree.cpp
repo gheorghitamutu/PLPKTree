@@ -8,15 +8,7 @@ Tree::Tree()
 
 Tree::~Tree()
 {
-	if (this->current_exp != NULL && this->current_exp != this->root_exp)
-	{
-		delete this->current_exp;
-	}
-
-	if (this->root_exp != NULL)
-	{
-		delete this->root_exp;
-	}
+	// not deleting anymore any expressions as they are used later after this class is deleted
 }
 
 void Tree::AddBranch(Expression* expression)

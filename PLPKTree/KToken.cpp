@@ -43,6 +43,10 @@ char * KToken::GetTokenValue()
 void KToken::SetTokenType(char* type)
 {
 	this->type = (char*)malloc(MAX_TOKEN_SIZE);
+	if (this->type == NULL)
+	{
+		exit(1);
+	}
 	strcpy(this->type, type);
 
 	this->count_children++;
@@ -54,6 +58,10 @@ void KToken::SetTokenType(char* type)
 void KToken::SetTokenValue(char * value)
 {
 	this->value = (char*)malloc(MAX_TOKEN_SIZE);
+	if (this->value == NULL)
+	{
+		exit(1);
+	}
 	strcpy(this->value, value);
 
 	this->count_children++;
