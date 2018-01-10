@@ -19,7 +19,7 @@ public:
     enum { Type = UserType + 1 };
     int type() const override { return Type; }
 
-    void CalculateForces();
+    void UpdatePosition();
     bool Advance();
 	QPointF GetPos();
 
@@ -27,6 +27,14 @@ public:
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 	void SetNewPos(QPointF newPos);
+
+	void SetColor(QColor color);
+	void SetDarkColor(QColor dark_color);
+
+	void RecursiveColorChange(Edge* edge, QColor color);
+
+	bool IsSelected();
+	void SetSelected(bool selected);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -41,4 +49,5 @@ private:
     QString node_name;
 	QColor color;
 	QColor dark_color;
+	bool is_selected = false;
 };

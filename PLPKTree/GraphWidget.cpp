@@ -151,6 +151,26 @@ void GraphWidget::ItemMoved()
 	}
 }
 
+Node * GraphWidget::GetRootNode()
+{
+	return this->root_node;
+}
+
+bool GraphWidget::IsItemGrabbed()
+{
+	foreach(QGraphicsItem *item, scene()->items())
+	{
+		if (Node* node = qgraphicsitem_cast<Node *>(item))
+		{
+			if (node->IsSelected())
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key())
@@ -160,10 +180,60 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_Minus:
         ZoomOut();
-        break;
+		break;
     default:
         QGraphicsView::keyPressEvent(event);
     }
+}
+
+void GraphWidget::mouseMoveEvent(QMouseEvent * event)
+{
+	if (event->buttons() & Qt::LeftButton && !IsItemGrabbed())
+	{
+		QPointF oldp = mapToScene(this->origin);
+		QPointF newp = mapToScene(event->pos());
+		QPointF translation = newp - oldp;
+
+		translate(translation.x(), translation.y());
+
+		origin.setX(event->x());
+		origin.setY(event->y());
+	}
+	QGraphicsView::mouseMoveEvent(event);
+}
+
+void GraphWidget::mousePressEvent(QMouseEvent * event)
+{
+	if (event->MouseButtonPress)
+	{
+		foreach(QGraphicsItem *item, scene()->items())
+		{
+			if (Node *node = qgraphicsitem_cast<Node *>(item))
+			{
+				node->SetSelected(false);
+				if (node != root_node)
+				{
+					node->SetColor(Qt::yellow);
+					node->SetDarkColor(Qt::darkYellow);
+				}
+				else
+				{
+					node->SetColor(Qt::red);
+					node->SetDarkColor(Qt::darkRed);
+				}
+				node->update();
+			}
+			if (Edge *edge = qgraphicsitem_cast<Edge *>(item))
+			{
+				edge->SetColor(Qt::black);
+				edge->update();
+			}
+		}
+
+		origin.setX(event->x());
+		origin.setY(event->y());
+	}
+	QGraphicsView::mousePressEvent(event);
 }
 
 void GraphWidget::timerEvent(QTimerEvent * event)
@@ -181,7 +251,7 @@ void GraphWidget::timerEvent(QTimerEvent * event)
 
 	foreach(Node *node, nodes)
 	{
-		node->CalculateForces();
+		node->UpdatePosition();
 	}
 
     bool itemsMoved = false;
@@ -236,8 +306,10 @@ void GraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
 void GraphWidget::ScaleView(qreal scaleFactor)
 {
     qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
-    if (factor < 0.07 || factor > 100)
-        return;
+	if (factor < 0.07 || factor > 100)
+	{
+		return;
+	}
 
     scale(scaleFactor, scaleFactor);
 }

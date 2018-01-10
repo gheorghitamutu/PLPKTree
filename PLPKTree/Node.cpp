@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QStyleOption>
 
+
 Node::Node(GraphWidget *graph_widget, QString node_name, QColor color, QColor dark_color)
     : graph(graph_widget),
       node_name(node_name),
@@ -31,62 +32,9 @@ QList<Edge *> Node::edges() const
     return edge_list;
 }
 
-void Node::CalculateForces()
+void Node::UpdatePosition()
 {
-    if (!scene() || scene()->mouseGrabberItem() == this)
-	{
-        new_pos = pos();
-        return;
-    }
-
-    // Sum up all forces pushing this item away
-    qreal xvel = 0;
-    qreal yvel = 0;
-    foreach (QGraphicsItem *item, scene()->items())
-	{
-        Node *node = qgraphicsitem_cast<Node *>(item);
-		if (!node)
-		{
-			continue;
-		}
-
-        QPointF vec = mapToItem(node, 0, 0);
-        qreal dx = vec.x();
-        qreal dy = vec.y();
-        double l = 2.0 * (dx * dx + dy * dy);
-        if (l > 0)
-		{
-            xvel += (dx * 150.0) / l;
-            yvel += (dy * 150.0) / l;
-        }
-    }
-
-    // Now subtract all forces pulling items together
-    double weight = (edge_list.size() + 1) * 10;
-    foreach (Edge *edge, edge_list)
-	{
-        QPointF vec;
-		if (edge->SourceNode() == this)
-		{
-			vec = mapToItem(edge->DestNode(), 0, 0);
-		}
-		else
-		{
-			vec = mapToItem(edge->SourceNode(), 0, 0);
-		}
-        xvel -= vec.x() / weight;
-        yvel -= vec.y() / weight;
-    }
-
-	if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
-	{
-		xvel = yvel = 0;
-	}
-
-    QRectF scene_rect = scene()->sceneRect();
-	new_pos = pos(); // +QPointF(xvel, yvel);                                                         // these lines make the graph elastic
-    //new_pos.setX(qMin(qMax(new_pos.x(), scene_rect.left() + 10), scene_rect.right() - 10));    	  // these lines make the graph elastic
-    //new_pos.setY(qMin(qMax(new_pos.y(), scene_rect.top() + 10), scene_rect.bottom() - 10));		  // these lines make the graph elastic
+	new_pos = pos();
 }
 
 bool Node::Advance()
@@ -161,6 +109,48 @@ void Node::SetNewPos(QPointF newPos)
 	this->new_pos = newPos;
 }
 
+void Node::SetColor(QColor color)
+{
+	this->color = color;
+}
+
+void Node::SetDarkColor(QColor dark_color)
+{
+	this->dark_color = dark_color;
+}
+
+bool Node::IsSelected()
+{
+	return this->is_selected;
+}
+
+void Node::SetSelected(bool selected)
+{
+	this->is_selected = selected;
+}
+
+void Node::RecursiveColorChange(Edge* p_edge, QColor color)
+{
+	foreach(QGraphicsItem *item, scene()->items())
+	{
+		if (Edge *edge = qgraphicsitem_cast<Edge *>(item))
+		{
+			if (p_edge->GetSourceNode() == edge->GetDestNode() && p_edge->GetSourceNode() != this->graph->GetRootNode())
+			{
+				p_edge->GetSourceNode()->SetColor(Qt::green);
+				p_edge->GetSourceNode()->SetDarkColor(Qt::darkGreen);
+				p_edge->GetSourceNode()->update();
+
+				edge->SetColor(Qt::green);
+				edge->update();
+
+				RecursiveColorChange(edge, color);
+				break;
+			}
+		}
+	}
+}
+
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change)
@@ -181,6 +171,34 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+	if(event->MouseButtonPress && event->button() ==  Qt::LeftButton)
+	{
+		this->color = Qt::blue;
+		this->dark_color = Qt::darkBlue;
+		this->is_selected = true;
+		foreach(QGraphicsItem *item, scene()->items())
+		{
+			if (Edge *edge = qgraphicsitem_cast<Edge *>(item))
+			{
+				if (edge->GetSourceNode() == this)
+				{
+					edge->SetColor(Qt::red);
+					edge->update();
+
+					edge->GetDestNode()->SetColor(Qt::white);
+					edge->GetDestNode()->SetDarkColor(Qt::white);
+					edge->GetDestNode()->update();
+				}
+				else if (edge->GetDestNode() == this)
+				{
+					edge->SetColor(Qt::blue);
+					edge->update();
+
+					RecursiveColorChange(edge, Qt::darkGreen);
+				}
+			}
+		}
+	}
     update();
     QGraphicsItem::mousePressEvent(event);
 }

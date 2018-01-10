@@ -15,12 +15,18 @@ public:
 
     void ItemMoved();
 
+	Node* GetRootNode();
+
+	bool IsItemGrabbed();
+
 public slots:
     void ZoomIn();
     void ZoomOut();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+	void mousePressEvent(QMouseEvent *event) override;
+	void mouseMoveEvent(QMouseEvent * event) override;
     void timerEvent(QTimerEvent *event) override;
 
 #if QT_CONFIG(wheelevent)
@@ -39,4 +45,6 @@ private:
 	float tree_nodes_width;
 	int screen_height;
 	int screen_width;
+
+	QPoint origin;
 };
