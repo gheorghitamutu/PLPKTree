@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
 	InputFile* input_file = new InputFile;
-	input_file->ReadFile(argv[1]);
+    input_file->ReadFile("C:\\Users\\ghita\\Documents\\GitHub\\plpktree\\PLPKTree\\Test01.txt");
 	input_file->ParseInput();
 	input_file->ParseTree();
 	std::vector<std::vector<Expression*>> tree = input_file->GetTree();

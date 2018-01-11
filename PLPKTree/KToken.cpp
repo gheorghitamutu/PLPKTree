@@ -7,7 +7,7 @@ KToken::KToken()
 	this->type = NULL;
 	this->value = NULL;
 	SetIdentifier('#');
-	SetExpressionName("KToken");
+    SetExpressionName((char*)"KToken");
 }
 
 

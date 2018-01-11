@@ -1,3 +1,7 @@
+#ifndef GRAPHWIDGET_H
+#define GRAPHWIDGET_H
+
+
 #include <QGraphicsView>
 #include "Expression.h"
 #include "Edge.h"
@@ -48,3 +52,5 @@ private:
 
 	QPoint origin;
 };
+
+#endif

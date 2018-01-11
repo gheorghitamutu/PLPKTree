@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NODE_H
+#define NODE_H
+
 #include <QGraphicsItem>
 #include <QList>
 
@@ -51,3 +53,5 @@ private:
 	QColor dark_color;
 	bool is_selected = false;
 };
+
+#endif

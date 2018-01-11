@@ -1,4 +1,6 @@
-#pragma once
+#ifndef INPUTFILE_H
+#define INPUTFILE_H
+
 #include "Input.h"
 class InputFile :
 	public Input
@@ -16,3 +18,4 @@ public:
 	int file_size;
 };
 
+#endif

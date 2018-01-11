@@ -1,5 +1,8 @@
-#pragma once
+#ifndef EXPRESSION_H
+#define EXPRESSION_H
+
 #include "IncludeHeader.h"
+
 class Expression
 {
 public:
@@ -26,3 +29,4 @@ protected:
 
 };
 
+#endif

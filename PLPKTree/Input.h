@@ -1,4 +1,6 @@
-#pragma once
+#ifndef INPUT_H
+#define INPUT_H
+
 #include "IncludeHeader.h"
 #include "Expression.h"
 #include "Tree.h"
@@ -24,4 +26,4 @@ public:
 	Tree tree;
 };
 
- 
+#endif

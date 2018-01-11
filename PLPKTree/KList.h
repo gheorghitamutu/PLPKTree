@@ -1,4 +1,6 @@
-#pragma once
+#ifndef KLIST_H
+#define KLIST_H
+
 #include "IncludeHeader.h"
 #include "Expression.h"
 
@@ -11,3 +13,4 @@ public:
 	void SetChildrenCount();
 };
 
+#endif

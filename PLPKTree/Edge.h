@@ -1,4 +1,6 @@
-#pragma once
+#ifndef EDGE_H
+#define EDGE_H
+
 #include <QGraphicsItem>
 
 class Node;
@@ -33,3 +35,5 @@ private:
 
 	QColor color;
 };
+
+#endif

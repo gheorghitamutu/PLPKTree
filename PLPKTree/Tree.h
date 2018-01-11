@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TREE_H
+#define TREE_H
+
 #include "Expression.h"
 
 class Tree
@@ -17,3 +19,4 @@ private:
 	std::vector<std::vector<Expression*>> tree; // use for actual drawing
 };
 
+#endif

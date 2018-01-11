@@ -1,4 +1,6 @@
-#pragma once
+#ifndef KTOKEN_H
+#define KTOKEN_H
+
 #include "Expression.h"
 class KToken : public Expression
 {
@@ -17,3 +19,4 @@ private:
 	char* value;
 };
 
+#endif
