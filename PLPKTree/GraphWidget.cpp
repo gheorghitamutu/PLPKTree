@@ -1,11 +1,10 @@
-#include "Graphwidget.h"
+#include "GraphWidget.h"
 #include "Edge.h"
 #include "Node.h"
 
 #include <math.h>
 
 #include <QKeyEvent>
-#include <QRandomGenerator>
 #include <qguiapplication.h>
 #include <qscreen.h>
 

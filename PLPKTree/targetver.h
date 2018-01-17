@@ -5,6 +5,7 @@
     //linux code goes here
 #elif _WIN32
     #include <SDKDDKVer.h>
+    #include <tchar.h>
 #else
 
 #endif

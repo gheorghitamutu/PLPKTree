@@ -2,7 +2,7 @@
 #include <QTime>
 #include <QMainWindow>
 
-#include "graphwidget.h"
+#include "GraphWidget.h"
 #include "InputFile.h"
 
 int main(int argc, char *argv[])

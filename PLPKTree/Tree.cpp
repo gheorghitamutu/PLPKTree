@@ -55,7 +55,7 @@ void Tree::ParseTree()
 			nodes_to_visit.emplace_back(this->current_exp);
 		}
 		
-		int v_size = nodes_to_visit.size();
+        int v_size = nodes_to_visit.size();
 		while (nodes_to_visit.size() > 0)
 		{
 			for (auto exp : nodes_to_visit)

@@ -1,5 +1,5 @@
 #include "Edge.h"
-#include "node.h"
+#include "Node.h"
 
 #include <qmath.h>
 #include <QPainter>
